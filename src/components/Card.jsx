@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import { Link } from "react-router-dom"
-import "bootstrap/dist/css/bootstrap.min.css"
-import Card from "react-bootstrap/Card"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faThumbsUp } from "@fortawesome/free-solid-svg-icons"
-import Stack from "react-bootstrap/Stack"
-import { LazyLoadImage } from "react-lazy-load-image-component"
-import "react-lazy-load-image-component/src/effects/blur.css"
+import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Card from "react-bootstrap/Card";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import Stack from "react-bootstrap/Stack";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 export const UserCard = ({ user }) => {
   return (
@@ -37,12 +37,12 @@ export const UserCard = ({ user }) => {
     // </>
     <Card className="card d-flex flex-column p-0 col link">
       <LazyLoadImage
+        className="card-img"
         src={user.photoUrl}
         alt={user.displayName}
         effect="blur"
         loading="lazy"
       />
-
       <Card.Body className="d-flex flex-column justify-content-start align-items-center">
         <div>
           <Stack className="d-flex justify-content-start align-items-center mb-4">
@@ -67,20 +67,14 @@ export const UserCard = ({ user }) => {
             className="d-flex justify-content-center align-items-center gap-2"
           >
             <small>
-              <FontAwesomeIcon
-                icon={faThumbsUp}
-                className="ms-2"
-              />
+              <FontAwesomeIcon icon={faThumbsUp} className="ms-2" />
             </small>
             <small className="mb-0">{user.likes}</small>
           </Stack>
         </Stack>
-        <Link
-          to={`/photographers/${user.id}`}
-          className="stretched-link"
-        />
+        <Link to={`/photographers/${user.id}`} className="stretched-link" />
         {/* <Button variant="outline-primary">Learn more</Button> */}
       </Card.Footer>
     </Card>
-  )
-}
+  );
+};

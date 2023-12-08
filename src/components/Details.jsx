@@ -1,36 +1,29 @@
 /* eslint-disable react/prop-types */
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { deleteOwnUser, fetchUser, queryClient } from "../http"
-import { useNavigate, useRouteLoaderData } from "react-router-dom"
-import { LazyLoadImage } from "react-lazy-load-image-component"
-import "react-lazy-load-image-component/src/effects/blur.css"
-import Button from "react-bootstrap/Button"
-import Image from "react-bootstrap/Image"
-import "bootstrap/dist/css/bootstrap.min.css"
-import Card from "react-bootstrap/Card"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faImages } from "@fortawesome/free-solid-svg-icons"
-import { faThumbsUp } from "@fortawesome/free-solid-svg-icons"
-import { faList } from "@fortawesome/free-solid-svg-icons"
-import { faCheck } from "@fortawesome/free-solid-svg-icons"
-import Stack from "react-bootstrap/Stack"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-
-// avatarUrl
-// description
-// displayName
-// salary
-// likes
-// experience
-// skills
-// gallery
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteOwnUser, fetchUser, queryClient } from "../http";
+import { useNavigate } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import Button from "react-bootstrap/Button";
+import Image from "react-bootstrap/Image";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Card from "react-bootstrap/Card";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImages } from "@fortawesome/free-solid-svg-icons";
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faList } from "@fortawesome/free-solid-svg-icons";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import Stack from "react-bootstrap/Stack";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { useAuthContext } from "../context/authContext";
+import Spinner from "react-bootstrap/Spinner";
+import UserForm from "./UserForm";
 
 export const Details = ({ id }) => {
-  const navigate = useNavigate()
-  const credentials = useRouteLoaderData("root")
-  console.log(credentials?.isAdmin)
-  console.log(id)
+  const navigate = useNavigate();
+  const { currentUser } = useAuthContext();
+
   const {
     data: user,
     isPending,
@@ -38,148 +31,149 @@ export const Details = ({ id }) => {
   } = useQuery({
     queryKey: ["users", { id }],
     queryFn: () => fetchUser(id),
-    retry: false,
-  })
+    retry: (failureCount, error) => {
+      console.log(failureCount);
+      if (error.message === "User not found") return false;
+      return failureCount < 2;
+    },
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
   const { mutate, isPending: isDeletePending } = useMutation({
     mutationFn: deleteOwnUser,
     onMutate: () => {
-      queryClient.cancelQueries({ queryKey: ["users"] })
+      queryClient.cancelQueries({ queryKey: ["users"] });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] })
-      navigate("/photographers", { replace: true })
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      navigate("/photographers", { replace: true });
     },
-  })
+  });
 
   return (
     <>
-      {(isPending || isDeletePending) && <div>Loading...</div>}
-      {isError && <Button variant="primary">Create Profile</Button>}
+      {(isPending || isDeletePending) && (
+        <div className="d-flex justify-content-center align-items-center vh-75">
+          <Spinner animation="grow" role="status" variant="primary">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      )}
+      {isError && <UserForm />}
       {user && (
         <Card className="card d-flex flex-column p-0 m-4">
-          {/* <Card.Img src={user.photoUrl} /> */}
           <Card.Body className="d-flex flex-column justify-content-start align-items-center p-4">
-            <Stack
-              direction="horizontal"
-              className="d-flex justify-content-between align-items-center mb-5"
-            >
+            {currentUser?.uid === id && (
               <Stack
                 direction="horizontal"
-                className="d-flex justify-content-center align-items-center gap-2"
+                className="d-flex justify-content-end"
               >
-                <Image
-                  className="avatar"
-                  roundedCircle
-                  width="48"
-                  height="48"
-                  src={user.avatarUrl}
-                />
-                <Stack className="d-flex justify-content-start align-items-start mb-0 text-muted">
-                  <Card.Title className="mb-1">{user.displayName}</Card.Title>
-                  <Stack
-                    direction="horizontal"
-                    className="d-flex justify-content-start align-items-center"
-                  >
-                    <small>{user.experience}</small>
-                    <small>
-                      <FontAwesomeIcon
-                        icon={faThumbsUp}
-                        className="ms-2"
-                      />
-                      <span className="mb-0"> {user.likes}</span>
-                    </small>
+                <Button variant="outline-danger">Delete account</Button>
+                <Button variant="outline-primary">Edit profile</Button>
+              </Stack>
+            )}
+            <section id="header" className="w-100">
+              <Stack
+                direction="horizontal"
+                className="d-flex justify-content-between align-items-center mb-5"
+              >
+                <Stack
+                  direction="horizontal"
+                  className="d-flex justify-content-center align-items-center gap-2"
+                >
+                  <Image
+                    className="avatar"
+                    roundedCircle
+                    width="48"
+                    height="48"
+                    src={user.avatarUrl}
+                  />
+                  <Stack className="d-flex justify-content-start align-items-start mb-0 text-muted">
+                    <Card.Title className="mb-1">{user.displayName}</Card.Title>
+                    <Stack
+                      direction="horizontal"
+                      className="d-flex justify-content-start align-items-center"
+                    >
+                      <small>{user.experience}</small>
+                      <small>
+                        <FontAwesomeIcon icon={faThumbsUp} className="ms-2" />
+                        <span className="mb-0"> {user.likes}</span>
+                      </small>
+                    </Stack>
                   </Stack>
                 </Stack>
+                <Stack direction="horizontal" className="text-primary mb-0">
+                  <h4>{Number(user.salary)}€/hour</h4>
+                </Stack>
               </Stack>
-              <Stack
-                direction="horizontal"
-                className="text-primary mb-0"
-              >
-                <h4>{Number(user.salary)}€/hour</h4>
+            </section>
+            <Card.Text className="mb-5 mt-1">{user.description}</Card.Text>
+            <section id="skills" className="w-100">
+              <Stack className="d-flex justify-content-start align-items-center mt-5">
+                <h6 className="mb-2 d-flex gap-2 align-items-center text-muted">
+                  <FontAwesomeIcon icon={faList} />
+                  <span className="mb-0">Skills</span>
+                </h6>
+                <Row className="d-flex justify-content-center align-items-center mb-2">
+                  <Col xs={12} md={10}>
+                    <p className="text-center text-muted">
+                      This section shows a list of skills or themes provided by
+                      photographer.
+                    </p>
+                  </Col>
+                </Row>
               </Stack>
-            </Stack>
-
-            <Card.Text className="mb-5 mt-3">{user.description}</Card.Text>
-
-            <Stack className="d-flex justify-content-start align-items-center mb-5 mt-3">
-              <h6 className="mb-2 d-flex gap-2 align-items-center text-muted">
-                <FontAwesomeIcon icon={faImages} />
-                <span className="mb-0">Gallery</span>
-              </h6>
-              <Row className="d-flex justify-content-center align-items-center mb-2">
-                <Col
-                  xs={12}
-                  md={10}
-                >
-                  <p className="text-center text-muted">
-                    This section shows a set of previous works provided by the
-                    photographer.
-                  </p>
-                </Col>
+              <Row className="skills w-100 mb-5">
+                {user.skills.map((skill, i) => (
+                  <Col key={i} className=" p-0" xs={12}>
+                    <Card className="p-4">
+                      <Card.Text>
+                        <FontAwesomeIcon
+                          icon={faCheck}
+                          className="text-primary"
+                        />
+                        <span> {skill}</span>
+                      </Card.Text>
+                    </Card>
+                  </Col>
+                ))}
               </Row>
-              <Row className="d-flex justify-content-center align-items-center">
-                <Col
-                  className="gallery"
-                  xs={12}
-                >
-                  {user.gallery.map((image, i) => (
-                    <LazyLoadImage
-                      key={i}
-                      src={image}
-                      alt="gallery"
-                      effect="blur"
-                      loading="lazy"
-                      className="img-fluid"
-                    />
-                  ))}
-                </Col>
-              </Row>
-            </Stack>
-            <Stack className="d-flex justify-content-start align-items-center mt-3">
-              <h6 className="mb-2 d-flex gap-2 align-items-center text-muted">
-                <FontAwesomeIcon icon={faList} />
-                <span className="mb-0">Skills</span>
-              </h6>
-              <Row className="d-flex justify-content-center align-items-center mb-2">
-                <Col
-                  xs={12}
-                  md={10}
-                >
-                  <p className="text-center text-muted">
-                    This section shows a list of skills or themes provided by
-                    photographer.
-                  </p>
-                </Col>
-              </Row>
-            </Stack>
-            <Row className="skills w-100">
-              {user.skills.map((skill, i) => (
-                <Col
-                  key={i}
-                  className=" p-0"
-                  xs={12}
-                >
-                  <Card className="p-4">
-                    <Card.Text>
-                      <FontAwesomeIcon
-                        icon={faCheck}
-                        className="text-primary"
-                      />
-                      <span> {skill}</span>
-                    </Card.Text>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
+            </section>
+            <section id="gallery" className="w-100">
+              <Stack className="d-flex justify-content-start align-items-center mt-5">
+                <h6 className="mb-2 d-flex gap-2 align-items-center text-muted">
+                  <FontAwesomeIcon icon={faImages} />
+                  <span className="mb-0">Gallery</span>
+                </h6>
+                <Row className="d-flex justify-content-center align-items-center mb-2">
+                  <Col xs={12} md={10}>
+                    <p className="text-center text-muted">
+                      This section shows a set of previous works provided by the
+                      photographer.
+                    </p>
+                  </Col>
+                </Row>
+                <Row className="d-flex justify-content-center align-items-center">
+                  <Col className="gallery" xs={12}>
+                    {user.gallery.map((image, i) => (
+                      <Card key={i}>
+                        <LazyLoadImage
+                          src={image}
+                          alt="gallery"
+                          effect="blur"
+                          loading="lazy"
+                          className="card-img"
+                        />
+                      </Card>
+                    ))}
+                  </Col>
+                </Row>
+              </Stack>
+            </section>
           </Card.Body>
-          {/* <Card.Footer className="d-flex justify-content-center align-items-center bg-white border-0 m-2">
-        <Button variant="outline-primary">Learn more</Button>
-      </Card.Footer> */}
           <Card.Footer className="text-primary d-flex justify-content-center">
             <Button variant="outline-primary">Hire me</Button>
-
-            {/* <Button variant="outline-primary">Learn more</Button> */}
           </Card.Footer>
         </Card>
         // <>
@@ -235,7 +229,7 @@ export const Details = ({ id }) => {
         // </>
       )}
     </>
-  )
-}
+  );
+};
 
 /* eslint-disable react/prop-types */

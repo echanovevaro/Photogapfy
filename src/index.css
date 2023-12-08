@@ -41,6 +41,11 @@ a {
   color: inherit;
 }
 
+.navbar{
+  padding-bottom: 1rem;
+  border-bottom: 1px dotted #ccc;
+}
+
 b {
   font-weight: 600;
 }
@@ -60,3 +65,11 @@ b {
   -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
   filter: grayscale(100%);
 }
+
+.vh-75 {
+  height: 75vh;
+}
+
+/* .anchor {
+    scroll-margin-top: 60px;
+} */

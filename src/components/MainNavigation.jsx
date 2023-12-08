@@ -1,37 +1,19 @@
-import { Form as RouterForm, Link, useSubmit } from "react-router-dom"
-import { useEffect } from "react"
-import { useLoaderData } from "react-router-dom"
-import Button from "react-bootstrap/Button"
-import Container from "react-bootstrap/Container"
-import Form from "react-bootstrap/Form"
-import Nav from "react-bootstrap/Nav"
-import Navbar from "react-bootstrap/Navbar"
-import NavDropdown from "react-bootstrap/NavDropdown"
+import { Form as RouterForm, Link, useSubmit } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import { useAuthContext } from "../context/authContext";
 
 // import classes from "./MainNavigation.module.css"
 
 function MainNavigation() {
-  const credentials = useLoaderData()
-  const isAdmin = credentials?.isAdmin || false
-  const token = credentials?.token
-  const submit = useSubmit()
-  useEffect(() => {
-    if (!token) return
-    const expiration = localStorage.getItem("expiration")
-    if (expiration && new Date(expiration) <= new Date()) {
-      submit("/logout", { method: "post" })
-    }
-    const timeout = setTimeout(() => {
-      submit("/logout", { method: "post" })
-    }, new Date(expiration) - new Date())
+  const { currentUser } = useAuthContext();
 
-    return () => clearTimeout(timeout)
-  }, [token])
   return (
-    <Navbar
-      expand="lg"
-      className="bg-white-opacity-90 sticky-top p-3"
-    >
+    <Navbar expand="lg" className="bg-white-opacity-90 sticky-top p-3">
       <Container fluid>
         <Link to="/">
           <Navbar.Brand>
@@ -45,45 +27,27 @@ function MainNavigation() {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link
-              as={Link}
-              to="/photographers"
-            >
+            <Nav.Link as={Link} to="/photographers">
               Photographers
             </Nav.Link>
-            {credentials && (
-              <Nav.Link
-                as={Link}
-                to="/profile"
-              >
+            {currentUser && (
+              <Nav.Link as={Link} to={`/photographers/${currentUser.uid}`}>
                 Profile
               </Nav.Link>
             )}
-            {!credentials && (
-              <NavDropdown
-                title="Authentication"
-                id="navbarScrollingDropdown"
-              >
-                <NavDropdown.Item
-                  as={Link}
-                  to="/auth?mode=login"
-                >
+            {!currentUser && (
+              <NavDropdown title="Authentication" id="navbarScrollingDropdown">
+                <NavDropdown.Item as={Link} to="/auth?mode=login">
                   Login
                 </NavDropdown.Item>
 
-                <NavDropdown.Item
-                  as={Link}
-                  to="/auth?mode=signup"
-                >
+                <NavDropdown.Item as={Link} to="/auth?mode=signup">
                   Sign up
                 </NavDropdown.Item>
               </NavDropdown>
             )}
-            {credentials && (
-              <RouterForm
-                method="post"
-                action="/logout"
-              >
+            {currentUser && (
+              <RouterForm method="post" action="/logout">
                 <button className="nav-link">Logout</button>
               </RouterForm>
             )}
@@ -100,7 +64,7 @@ function MainNavigation() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  )
+  );
 }
 
 {
@@ -184,4 +148,4 @@ function MainNavigation() {
     </header> */
 }
 
-export default MainNavigation
+export default MainNavigation;
