@@ -5,6 +5,8 @@ import Card from "react-bootstrap/Card"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import Stack from "react-bootstrap/Stack"
+import { LazyLoadImage } from "react-lazy-load-image-component"
+import "react-lazy-load-image-component/src/effects/blur.css"
 
 export const UserCard = ({ user }) => {
   return (
@@ -34,7 +36,13 @@ export const UserCard = ({ user }) => {
     //   </div>
     // </>
     <Card className="card d-flex flex-column p-0 col link">
-      <Card.Img src={user.photoUrl} />
+      <LazyLoadImage
+        src={user.photoUrl}
+        alt={user.displayName}
+        effect="blur"
+        loading="lazy"
+      />
+
       <Card.Body className="d-flex flex-column justify-content-start align-items-center">
         <div>
           <Stack className="d-flex justify-content-start align-items-center mb-4">
