@@ -2,6 +2,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { deleteOwnUser, fetchUser, queryClient } from "../http"
 import { useNavigate, useRouteLoaderData } from "react-router-dom"
+import { LazyLoadImage } from "react-lazy-load-image-component"
+import "react-lazy-load-image-component/src/effects/blur.css"
 import Button from "react-bootstrap/Button"
 import Image from "react-bootstrap/Image"
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -122,9 +124,12 @@ export const Details = ({ id }) => {
                   xs={12}
                 >
                   {user.gallery.map((image, i) => (
-                    <Image
+                    <LazyLoadImage
                       key={i}
                       src={image}
+                      alt="gallery"
+                      effect="blur"
+                      loading="lazy"
                       className="img-fluid"
                     />
                   ))}
