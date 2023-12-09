@@ -21,9 +21,9 @@ function HomePage() {
         </div>
       )}
       {data && (
-        <>
+        <div className="p-4">
           <Cards users={data} />
-        </>
+        </div>
       )}
     </>
   );

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import Stack from "react-bootstrap/Stack";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
@@ -43,12 +43,12 @@ export const UserCard = ({ user }) => {
         effect="blur"
         loading="lazy"
       />
-      <Card.Body className="d-flex flex-column justify-content-start align-items-center">
+      <Card.Body className="d-flex flex-column justify-content-start align-items-center text-center">
         <div>
-          <Stack className="d-flex justify-content-start align-items-center mb-4">
-            <Card.Title className="mb-1">{user.displayName}</Card.Title>
+          <Stack className="d-flex justify-content-start align-items-center mb-3">
+            <h6 className="mb-1 section-title">{user.displayName}</h6>
 
-            <small className="text-muted">{user.experience}</small>
+            <small className="text-primary">{user.experience}</small>
           </Stack>
           <Card.Text>{user.intro}</Card.Text>
         </div>
@@ -56,12 +56,15 @@ export const UserCard = ({ user }) => {
       {/* <Card.Footer className="d-flex justify-content-center align-items-center bg-white border-0 m-2">
         <Button variant="outline-primary">Learn more</Button>
       </Card.Footer> */}
-      <Card.Footer className="text-primary">
+      <Card.Footer className="text-primary ps-0 pe-0">
         <Stack
           direction="horizontal"
           className="d-flex justify-content-between align-items-center m-2"
         >
-          <h6 className="lh-0 mb-0">{`${Number(user.salary)} €/hour`}</h6>
+          <h6
+            className="lh-0 mb-0 section-title fs-5 text-grey"
+            style={{ color: "#666" }}
+          >{`${Number(user.salary)} €/hour`}</h6>
           <Stack
             direction="horizontal"
             className="d-flex justify-content-center align-items-center gap-2"
