@@ -87,7 +87,6 @@ export const Details = ({ id }) => {
                     className="d-flex justify-content-center align-items-center gap-2"
                   >
                     <Image
-                      className="avatar"
                       roundedCircle
                       width="46"
                       height="46"
@@ -105,7 +104,7 @@ export const Details = ({ id }) => {
                       </small>
                       <small>{user.likes}</small>
                     </div>
-                    <h6 className="section-title mb-0 mt-0 p-0 text-muted">
+                    <h6 className="section-title mb-0 mt-0 p-0">
                       {Number(user.salary)}€/hour
                     </h6>
                   </div>

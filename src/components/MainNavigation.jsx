@@ -13,7 +13,7 @@ function MainNavigation() {
   const { currentUser } = useAuthContext();
 
   return (
-    <Navbar expand="lg" className="bg-white-opacity-90 sticky-top p-3">
+    <Navbar expand="lg" className="bg-white-opacity-blur sticky-top p-3">
       <Container fluid>
         <Link to="/">
           <Navbar.Brand>
