@@ -299,7 +299,7 @@ function UserForm() {
               {photos.map((photo, i) => (
                 <Card key={i}>
                   <Card.Img src={photo} />
-                  <Card.Footer>
+                  <Card.Footer className="d-flex justify-content-end">
                     <Button
                       variant="outline-danger"
                       onClick={() => handleRemovePhoto(i)}

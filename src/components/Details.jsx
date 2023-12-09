@@ -98,11 +98,11 @@ export const Details = ({ id }) => {
                     </div>
                   </Stack>
                   <div className="d-flex flex-column justify-content-between align-items-end">
-                    <div className="d-flex justify-content-end align-items-center text-primary gap-2 mb-1">
-                      <small className="fw-lighter">
+                    <div className="d-flex justify-content-end align-items-center text-primary gap-2 mb-1 fw-lighter">
+                      <small className="font-smaller">
                         <FontAwesomeIcon icon={faThumbsUp} />
                       </small>
-                      <small>{user.likes}</small>
+                      <span>{user.likes}</span>
                     </div>
                     <h6 className="section-title mb-0 mt-0 p-0">
                       {Number(user.salary)}€/hour
@@ -114,7 +114,7 @@ export const Details = ({ id }) => {
               <section id="skills" className="w-100">
                 <Stack className="d-flex justify-content-start align-items-center mt-5">
                   <h6 className="mb-2 d-flex gap-2 align-items-center section-title">
-                    <small style={{ fontSize: "0.85rem" }}>
+                    <small className="font-smaller">
                       <FontAwesomeIcon icon={faList} />
                     </small>
                     <span className="mb-0">Skills</span>

@@ -67,9 +67,9 @@ export const UserCard = ({ user }) => {
           >{`${Number(user.salary)} €/hour`}</h6>
           <Stack
             direction="horizontal"
-            className="d-flex justify-content-center align-items-center gap-2"
+            className="d-flex justify-content-center align-items-center gap-2 fw-lighter"
           >
-            <small>
+            <small className="text-smaller">
               <FontAwesomeIcon icon={faThumbsUp} className="ms-2" />
             </small>
             <small className="mb-0">{user.likes}</small>

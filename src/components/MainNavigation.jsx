@@ -6,14 +6,34 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useAuthContext } from "../context/authContext";
+import { useEffect, useState } from "react";
 
 // import classes from "./MainNavigation.module.css"
 
 function MainNavigation() {
   const { currentUser } = useAuthContext();
+  const [scollClass, setScrollClass] = useState("");
+
+  useEffect(() => {
+    window.addEventListener("scroll", stickNavbar);
+
+    return () => {
+      window.removeEventListener("scroll", stickNavbar);
+    };
+  }, []);
+
+  const stickNavbar = () => {
+    if (window !== undefined) {
+      let windowHeight = window.scrollY;
+      windowHeight > 80 ? setScrollClass("border-bottom") : setScrollClass("");
+    }
+  };
 
   return (
-    <Navbar expand="lg" className="bg-white-opacity-blur sticky-top p-3">
+    <Navbar
+      expand="lg"
+      className={`bg-white-opacity-blur sticky-top p-3 ${scollClass}`}
+    >
       <Container fluid>
         <Link to="/">
           <Navbar.Brand>
