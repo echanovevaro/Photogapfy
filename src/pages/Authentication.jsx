@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { loginSchema, registerSchema, passwordSchema } from "../validation";
-import { logOut, logOutWithRedirect } from "../utils/auth";
+import { logOut } from "../utils/auth";
 import AuthForm from "../components/AuthForm";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
@@ -134,12 +134,13 @@ export async function action({ request }) {
           await sendEmailVerification(user, {
             url: "http://localhost:5173/auth?mode=login",
           });
-          return logOutWithRedirect();
+          logOut();
         } catch (e) {
           console.log(e);
           return json({ message: "Something went wrong" }, { status: 500 });
         }
-      } else {
+        return redirect("/auth?mode=login&emailNotVerified=true");
+      } else if (mode === "login") {
         if (!user.emailVerified) {
           logOut();
           return redirect("/auth?mode=login&emailNotVerified=true");
