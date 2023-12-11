@@ -10,26 +10,11 @@ import { loginSchema, registerSchema, passwordSchema } from "../validation";
 import { logOut } from "../utils/auth";
 import AuthForm from "../components/AuthForm";
 import Alert from "react-bootstrap/Alert";
-import Spinner from "react-bootstrap/Spinner";
-import { useAuthContext } from "../context/authContext";
 
 function AuthenticationPage() {
   const [searchParams] = useSearchParams();
   const isEmailNotVerified = searchParams.get("emailNotVerified") !== null;
   const isPasswordReset = searchParams.get("passwordReset") !== null;
-  const { currentUser } = useAuthContext();
-
-  if (currentUser == false) {
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-75">
-        <Spinner animation="grow" role="status" variant="primary">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </div>
-    );
-  } else if (currentUser) {
-    return <Navigate to={`/photographers/${currentUser.uid}`} replace />;
-  }
 
   return (
     <>
