@@ -92,9 +92,10 @@ export async function action({ request }) {
     } else throw e;
   } finally {
     if (userCredentials) {
+      const { user } = userCredentials;
       if (mode === "signup") {
         try {
-          await sendEmailVerification(auth.currentUser, {
+          await sendEmailVerification(user, {
             url: "https://jocular-sawine-5cf217.netlify.app/auth?mode=login",
           });
           await logOut();
