@@ -115,7 +115,7 @@ export async function action({ request }) {
 
       if (mode === "signup") {
         try {
-          await sendEmailVerification(user, {
+          await sendEmailVerification(auth.currentUser, {
             url: "https://jocular-sawine-5cf217.netlify.app/auth?mode=login",
           });
           await logOut();
