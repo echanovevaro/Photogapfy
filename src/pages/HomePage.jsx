@@ -56,8 +56,9 @@ function HomePage() {
         <div className="p-4">
           <Cards
             data={data}
-            orderBy={handleOrderBy}
+            handleOrder={handleOrderBy}
             onScroll={handleOnScroll}
+            orederedBy={orderBy}
           />
         </div>
       )}

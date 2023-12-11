@@ -4,9 +4,9 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 
-export const Cards = ({ data, orderBy }) => {
+export const Cards = ({ data, handleOrder, orederedBy }) => {
   return (
-    <Row className="p-4">
+    <Row className="p-4 mb-5">
       <h6 className="ps-0 display-6 text-primary mb-3">
         Find your professional
       </h6>
@@ -16,12 +16,12 @@ export const Cards = ({ data, orderBy }) => {
           id={`order-by`}
           size="sm"
           variant="secondary"
-          title="Order by"
+          title={`Order by ${orederedBy === "likes" ? "best rated" : "newest"}`}
         >
-          <Dropdown.Item eventKey="1" onClick={() => orderBy("likes")}>
+          <Dropdown.Item eventKey="1" onClick={() => handleOrder("likes")}>
             Best rated
           </Dropdown.Item>
-          <Dropdown.Item eventKey="2" onClick={() => orderBy("createdAt")}>
+          <Dropdown.Item eventKey="2" onClick={() => handleOrder("createdAt")}>
             Newest
           </Dropdown.Item>
         </DropdownButton>
