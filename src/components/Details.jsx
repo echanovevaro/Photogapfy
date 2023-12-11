@@ -18,11 +18,17 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import { useAuthContext } from "../context/authContext";
+import { useState } from "react";
+import Modal from "react-bootstrap/Modal";
 
 export const Details = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { currentUser } = useAuthContext();
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const {
     data: user,
@@ -45,7 +51,7 @@ export const Details = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      navigate("/photographers", { replace: true });
+      navigate("/photographers/new", { replace: true });
     },
   });
 
@@ -175,7 +181,9 @@ export const Details = () => {
             <Card.Footer className="d-flex justify-content-end gap-2">
               {currentUser?.uid === id && (
                 <>
-                  <Button variant="outline-danger">Delete account</Button>
+                  <Button variant="outline-danger" onClick={handleShow}>
+                    Delete profile
+                  </Button>
                   <Button
                     as={Link}
                     variant="outline-primary"
@@ -190,6 +198,21 @@ export const Details = () => {
               )}
             </Card.Footer>
           </Card>
+
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Delete your profile</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>This action cannot be undone. Are you sure?</Modal.Body>
+            <Modal.Footer>
+              <Button variant="outline-secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="outline-primary" onClick={mutate}>
+                Delete
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </>
       )}
     </>

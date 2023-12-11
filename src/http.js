@@ -108,9 +108,6 @@ export const deleteOwnUser = async (userId) => {
   }
   try{
     await deleteDoc(doc(db, "users", user.uid));
-    await user?.delete()
-    console.log("User deleted");
-    return await logOutWithRedirect();
   } catch(error) {
     throw new Error("An error ocurred while deleting the user", {status: 500});
   };

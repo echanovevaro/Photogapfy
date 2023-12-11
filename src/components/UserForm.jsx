@@ -350,7 +350,7 @@ function UserForm({ user }) {
             >
               <Button
                 as={Link}
-                to={`/photographers/${currentUser.uid}`}
+                to={`/photographers`}
                 variant="link"
                 className="text-grey"
               >

@@ -27,6 +27,7 @@ function ProfileFormPage() {
       return failureCount < 2;
     },
     staleTime: Infinity,
+    gcTime: 0,
   });
 
   if (isError && error.message !== "User not found") {
@@ -46,7 +47,7 @@ function ProfileFormPage() {
           <UserForm />
         </div>
       )}
-      {data && (
+      {!isError && data && (
         <div className="pt-5">
           <UserForm user={data} />
         </div>
