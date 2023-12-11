@@ -20,8 +20,8 @@ function ProfileFormPage() {
   }
 
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["users", { id }],
-    queryFn: () => fetchUser(id),
+    queryKey: ["users", { id: currentUser.uid }],
+    queryFn: () => fetchUser(currentUser.uid),
     retry: (failureCount, error) => {
       if (error.message === "User not found") return false;
       return failureCount < 2;
