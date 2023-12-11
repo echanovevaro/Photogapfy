@@ -1,4 +1,4 @@
-import { Navigate, json, redirect, useSearchParams } from "react-router-dom";
+import { json, redirect, useSearchParams } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
