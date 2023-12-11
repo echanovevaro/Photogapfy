@@ -1,4 +1,4 @@
-import { Form as RouterForm, Link, useSubmit } from "react-router-dom";
+import { Form as RouterForm, Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -7,11 +7,13 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useAuthContext } from "../context/authContext";
 import { useEffect, useState } from "react";
+import { useSearchContext } from "../context/searchContext";
 
 function MainNavigation() {
   const { currentUser } = useAuthContext();
-  console.log(currentUser);
+  const navigate = useNavigate();
   const [scollClass, setScrollClass] = useState("");
+  const { onSearch } = useSearchContext();
 
   useEffect(() => {
     window.addEventListener("scroll", stickNavbar);
@@ -27,6 +29,17 @@ function MainNavigation() {
       windowHeight > 80 ? setScrollClass("border-bottom") : setScrollClass("");
     }
   };
+
+  function handleSearch(e) {
+    e.preventDefault();
+    const search = e.target[0].value;
+    if (search.trim() !== "") {
+      onSearch(search);
+    } else {
+      onSearch(undefined);
+    }
+    navigate("/photographers", { replace: true });
+  }
 
   return (
     <Navbar
@@ -74,14 +87,16 @@ function MainNavigation() {
               </RouterForm>
             )}
           </Nav>
-          <Form className="d-flex">
+          <Form className="d-flex" onSubmit={(e) => handleSearch(e)}>
             <Form.Control
               type="search"
-              placeholder="Search"
+              placeholder="Search by name"
               className="me-2"
               aria-label="Search"
             />
-            <Button variant="outline-primary">Search</Button>
+            <Button variant="outline-primary" type="submit">
+              Search
+            </Button>
           </Form>
         </Navbar.Collapse>
       </Container>

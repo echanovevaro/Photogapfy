@@ -1,16 +1,33 @@
 import { QueryClient } from "@tanstack/react-query"
-import { collection, getDocs, doc, getDoc, deleteDoc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, query, doc, getDoc, deleteDoc, setDoc, updateDoc, orderBy, startAfter, limit, getDocs, where } from "firebase/firestore";
 import { auth, db } from "./firebase"
 import { logOutWithRedirect } from "./utils/auth";
 import { userExtendedSchema } from "./validation";
 
 export const queryClient = new QueryClient()
 
-export const fetchUsers = async () => {
-  const querySnapshot = await getDocs(collection(db, "users"));
-  let data = [];
-  querySnapshot.forEach((d) => {data.push({...d.data(), id: d.id})});
-  return data;
+export const fetchUsers = async (order, lastId, name) => {
+  console.log(name)
+  try {
+    const data = []
+    let q;
+    if(!lastId){
+      if(!name) q = query(collection(db, "users"), orderBy(order, "desc"), limit(8));
+      else q = query(collection(db, "users"), orderBy('displayName'), limit(8), where("displayName", ">=", name), where("displayName", "<=", name + "\uf8ff"), orderBy(order, "desc"))
+    } else {
+      const lastDoc = await getDoc(doc(db, "users", lastId));
+      if(!name) q = query(collection(db, "users"), orderBy(order, "desc"), startAfter(lastDoc), limit(8));
+      else q = query(collection(db, "users"), orderBy('displayName'), where("displayName", ">=", name), where("displayName", "<=", name + "\uf8ff"), orderBy(order, "desc"), startAfter(lastDoc), limit(8))
+    }
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((d) => {data.push({...d.data(), id: d.id})});
+    const id = data.length === 8 ? data[data.length - 1].id : null
+    return {data, id};
+  } catch (error) {
+    console.log(error)
+    throw new Error("An error ocurred while fetching users", { status: 500 })
+  }
+  
 }
 
 export const fetchUser = async (userId) => {

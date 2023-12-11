@@ -15,6 +15,7 @@ import AuthenticationPage, {
 import { AuthProvider } from "./context/authContext";
 import ProfileFormPage from "./pages/ProfileFormPage";
 import { logOutWithRedirect } from "./utils/auth";
+import { SearchProvider } from "./context/searchContext";
 
 const router = createBrowserRouter([
   {
@@ -54,12 +55,15 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
 function App() {
   return (
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+      <SearchProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </SearchProvider>
     </AuthProvider>
   );
 }
