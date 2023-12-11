@@ -133,7 +133,7 @@ export async function action({ request }) {
           await sendEmailVerification(user, {
             url: "https://jocular-sawine-5cf217.netlify.app/auth?mode=login",
           });
-          logOut();
+          await logOut();
           return redirect("/auth?mode=login&emailNotVerified=true");
         } catch (e) {
           console.log(e);
@@ -141,7 +141,7 @@ export async function action({ request }) {
         }
       } else if (mode === "login") {
         if (!user.emailVerified) {
-          logOut();
+          await logOut();
           return redirect("/auth?mode=login&emailNotVerified=true");
         }
 
