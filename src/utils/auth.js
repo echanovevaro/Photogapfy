@@ -1,5 +1,6 @@
-
-import { auth } from "../firebase"
+import { redirect } from "react-router-dom"
+import { auth, db } from "../firebase"
+import { doc, getDoc } from "firebase/firestore"
 
 export function getTokenDuration() {
   const storedExpirationDate = localStorage.getItem("expiration")

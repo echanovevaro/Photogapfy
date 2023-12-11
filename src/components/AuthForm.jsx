@@ -55,7 +55,14 @@ function AuthForm() {
   });
 
   const onSubmit = (data) => {
-    const formData = new FormData(data);
+    const formData = new FormData();
+    formData.append("email", data.email);
+    if (mode !== "password") {
+      formData.append("password", data.password);
+    }
+    if (mode === "signup") {
+      formData.append("password2", data.password2);
+    }
     submit(formData, { method: "POST" });
   };
 
