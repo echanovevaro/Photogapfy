@@ -1,8 +1,7 @@
 import { QueryClient } from "@tanstack/react-query"
 import { collection, getDocs, doc, getDoc, deleteDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "./firebase"
-import { logOut } from "./utils/auth";
-import { redirect } from "react-router-dom";
+import { logOutWithRedirect } from "./utils/auth";
 import { userExtendedSchema } from "./validation";
 
 export const queryClient = new QueryClient()
@@ -91,8 +90,7 @@ export const deleteOwnUser = async (userId) => {
     await deleteDoc(doc(db, "users", user.uid));
     await user?.delete()
     console.log("User deleted");
-    logOut();
-    return redirect("/auth?mode=login");
+    return logOutWithRedirect();
   } catch(error) {
     throw new Error("An error ocurred while deleting the user", {status: 500});
   };

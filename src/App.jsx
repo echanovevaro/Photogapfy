@@ -14,7 +14,7 @@ import AuthenticationPage, {
 } from "./pages/Authentication";
 import { AuthProvider } from "./context/authContext";
 import ProfileFormPage from "./pages/ProfileFormPage";
-import { logOut } from "./utils/auth";
+import { logOutWithRedirect } from "./utils/auth";
 
 const router = createBrowserRouter([
   {
@@ -33,8 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: "logout",
-        action: logOut,
-        element: <Navigate to="/auth?mode=login" replace />,
+        action: logOutWithRedirect,
       },
       {
         path: "photographers",
