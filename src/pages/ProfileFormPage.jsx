@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuthContext } from "../context/authContext";
 import UserForm from "../components/UserForm";
 import Spinner from "react-bootstrap/Spinner";
@@ -6,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchUser } from "../http";
 
 function ProfileFormPage() {
-  const { id } = useParams();
   const { currentUser } = useAuthContext();
   if (currentUser == false) {
     return (
@@ -18,8 +17,6 @@ function ProfileFormPage() {
     );
   } else if (!currentUser) {
     return <Navigate to="/auth?mode=login" replace />;
-  } else if (currentUser.uid !== id) {
-    return <Navigate to={`/photographers/${currentUser.uid}`} replace />;
   }
 
   const { data, isPending, isError, error } = useQuery({
@@ -45,7 +42,9 @@ function ProfileFormPage() {
         </div>
       )}
       {isError && error.message === "User not found" && (
-        <Navigate to="/photographers/new" replace />
+        <div className="pt-5">
+          <UserForm />
+        </div>
       )}
       {data && (
         <div className="pt-5">

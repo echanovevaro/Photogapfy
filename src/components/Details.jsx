@@ -33,7 +33,6 @@ export const Details = () => {
     queryKey: ["users", { id }],
     queryFn: () => fetchUser(id),
     retry: (failureCount, error) => {
-      console.log(failureCount);
       if (error.message === "User not found") return false;
       return failureCount < 2;
     },

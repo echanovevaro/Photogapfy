@@ -15,7 +15,6 @@ import { useAuthContext } from "../context/authContext";
 
 function AuthenticationPage() {
   const [searchParams] = useSearchParams();
-  const mode = searchParams.get("mode");
   const isEmailNotVerified = searchParams.get("emailNotVerified") !== null;
   const isPasswordReset = searchParams.get("passwordReset") !== null;
   const { currentUser } = useAuthContext();
@@ -99,7 +98,7 @@ export async function action({ request }) {
       );
     } else {
       await sendPasswordResetEmail(auth, data.email, {
-        url: "http://localhost:5173/auth?mode=login",
+        url: "https://jocular-sawine-5cf217.netlify.app/auth?mode=login",
       });
       return redirect("/auth?mode=login&passwordReset=true");
     }
@@ -132,14 +131,14 @@ export async function action({ request }) {
       if (mode === "signup") {
         try {
           await sendEmailVerification(user, {
-            url: "http://localhost:5173/auth?mode=login",
+            url: "https://jocular-sawine-5cf217.netlify.app/auth?mode=login",
           });
           logOut();
+          return redirect("/auth?mode=login&emailNotVerified=true");
         } catch (e) {
           console.log(e);
           return json({ message: "Something went wrong" }, { status: 500 });
         }
-        return redirect("/auth?mode=login&emailNotVerified=true");
       } else if (mode === "login") {
         if (!user.emailVerified) {
           logOut();
