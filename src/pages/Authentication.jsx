@@ -5,7 +5,7 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
 import { loginSchema, registerSchema, passwordSchema } from "../validation";
 import { logOut } from "../utils/auth";
 import AuthForm from "../components/AuthForm";
@@ -115,7 +115,7 @@ export async function action({ request }) {
 
       if (mode === "signup") {
         try {
-          await sendEmailVerification(auth.currentUser, {
+          await sendEmailVerification(user, {
             url: "https://jocular-sawine-5cf217.netlify.app/auth?mode=login",
           });
           await logOut();
