@@ -8,10 +8,9 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useAuthContext } from "../context/authContext";
 import { useEffect, useState } from "react";
 
-// import classes from "./MainNavigation.module.css"
-
 function MainNavigation() {
   const { currentUser } = useAuthContext();
+  console.log(currentUser);
   const [scollClass, setScrollClass] = useState("");
 
   useEffect(() => {
@@ -31,6 +30,7 @@ function MainNavigation() {
 
   return (
     <Navbar
+      collapseOnSelect
       expand="lg"
       className={`bg-white-opacity-blur sticky-top p-3 ${scollClass}`}
     >
@@ -42,33 +42,35 @@ function MainNavigation() {
         </Link>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }}
-            navbarScroll
-          >
-            <Nav.Link as={Link} to="/photographers">
+          <Nav className="me-auto my-2 my-lg-0" navbarScroll>
+            <Nav.Link eventKey="1" as={Link} to="/photographers">
               Photographers
             </Nav.Link>
             {currentUser && (
-              <Nav.Link as={Link} to={`/photographers/${currentUser.uid}`}>
+              <Nav.Link
+                eventKey="2"
+                as={Link}
+                to={`/photographers/${currentUser.uid}`}
+              >
                 Profile
               </Nav.Link>
             )}
             {!currentUser && (
               <NavDropdown title="Authentication" id="navbarScrollingDropdown">
-                <NavDropdown.Item as={Link} to="/auth?mode=login">
+                <NavDropdown.Item eventKey="3" as={Link} to="/auth?mode=login">
                   Login
                 </NavDropdown.Item>
 
-                <NavDropdown.Item as={Link} to="/auth?mode=signup">
+                <NavDropdown.Item eventKey="4" as={Link} to="/auth?mode=signup">
                   Sign up
                 </NavDropdown.Item>
               </NavDropdown>
             )}
             {currentUser && (
               <RouterForm method="post" action="/logout">
-                <button className="nav-link">Logout</button>
+                <Nav.Link as={Button} eventKey="5" type="submit">
+                  Logout
+                </Nav.Link>
               </RouterForm>
             )}
           </Nav>
@@ -85,87 +87,6 @@ function MainNavigation() {
       </Container>
     </Navbar>
   );
-}
-
-{
-  /* <header
-      className={classes.header}
-      style={
-        token
-          ? { justifyContent: "space-between" }
-          : { justifyContent: "flex-end" }
-      }
-    >
-      {token && (
-        <NavLink
-          to="/users"
-          className={({ isActive }) => (isActive ? classes.active : undefined)}
-          end
-        >
-          Home
-        </NavLink>
-      )}
-      <nav>
-        <ul className={classes.list}>
-          {token && (
-            <>
-              <li>
-                <NavLink
-                  to={`/users/${credentials.uid}`}
-                  className={({ isActive }) =>
-                    isActive ? classes.active : undefined
-                  }
-                  end
-                >
-                  My Profile
-                </NavLink>
-              </li>
-              {isAdmin && (
-                <li>
-                  <NavLink
-                    to="/users/new"
-                    className={({ isActive }) =>
-                      isActive ? classes.active : undefined
-                    }
-                  >
-                    New User
-                  </NavLink>
-                </li>
-              )}
-              <li>
-                <RouterForm method="post" action="/logout">
-                  <button>Logout</button>
-                </RouterForm>
-              </li>
-            </>
-          )}
-          {!token && (
-            <>
-              <li>
-                <NavLink
-                  to="/auth?mode=login"
-                  className={({ isActive }) =>
-                    isActive ? classes.active : undefined
-                  }
-                >
-                  Log in
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/auth?mode=signup"
-                  className={({ isActive }) =>
-                    isActive ? classes.active : undefined
-                  }
-                >
-                  Sign up
-                </NavLink>
-              </li>
-            </>
-          )}
-        </ul>
-      </nav>
-    </header> */
 }
 
 export default MainNavigation;

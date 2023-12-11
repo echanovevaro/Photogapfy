@@ -14,6 +14,7 @@ import AuthenticationPage, {
 } from "./pages/Authentication";
 import { tokenLoader, logOut } from "./utils/auth";
 import { AuthProvider } from "./context/authContext";
+import ProfileFormPage from "./pages/ProfileFormPage";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: "photographers/:id",
         element: <DetailUser />,
+      },
+      {
+        path: "photographers/:id/edit",
+        element: <ProfileFormPage />,
+      },
+      {
+        path: "photographers/new",
+        element: <ProfileFormPage />,
       },
     ],
   },

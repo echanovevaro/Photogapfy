@@ -1,6 +1,5 @@
-import { redirect } from "react-router-dom"
-import { auth, db } from "../firebase"
-import { doc, getDoc } from "firebase/firestore"
+
+import { auth } from "../firebase"
 
 export function getTokenDuration() {
   const storedExpirationDate = localStorage.getItem("expiration")
@@ -57,8 +56,6 @@ export function checkAuthLoader() {
 }
 
 export function logOut() {
-  localStorage.removeItem("token")
-  localStorage.removeItem("expiration")
   try {
     auth.signOut()
   } catch (error) {

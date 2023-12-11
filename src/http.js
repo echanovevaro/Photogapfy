@@ -1,8 +1,9 @@
 import { QueryClient } from "@tanstack/react-query"
-import { collection, getDocs, doc, getDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, deleteDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "./firebase"
 import { logOut } from "./utils/auth";
 import { redirect } from "react-router-dom";
+import { userExtendedSchema } from "./validation";
 
 export const queryClient = new QueryClient()
 
@@ -10,7 +11,6 @@ export const fetchUsers = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
   let data = [];
   querySnapshot.forEach((d) => {data.push({...d.data(), id: d.id})});
-  console.log(data);
   return data;
 }
 
@@ -20,22 +20,66 @@ export const fetchUser = async (userId) => {
 
   if (docSnap.exists()) {
     const data= {...docSnap.data(), id: docSnap.id};
-    console.log(data);
     return data;
   } else {
     throw new Error("User not found", {status: 404});
   }
 }
-export const createUser = async (user) => {
-  const response = await fetch("http://localhost:3000/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
-  })
+export const createUser = async ({update, userId, user}) => {
 
-  return response.json()
+  const validations = userExtendedSchema.safeParse(user)
+
+  if (!validations.success) {
+    const errors = {}
+    for (const error of validations.error.errors) {
+      if (!errors[error.path[0]]) errors[error.path[0]] = [error.message]
+      else errors[error.path[0]].push(error.message)
+    }
+
+    const error = new Error('Valitation error check the fields', { status: 422 })
+    error.errors = errors
+    throw error
+  }
+  const data = validations.data
+  try {
+    if(update){
+      const userRef = doc(db, "users", userId);
+      await updateDoc(userRef, {
+        displayName: data.displayName,
+        avatarUrl: data.avatarUrl,
+        photoUrl: data.photoUrl,
+        description: data.description,
+        experience: data.experience,
+        salary: data.salary,
+        intro: data.intro,
+        skills: data.skills,
+        gallery: data.gallery,
+        updatedAt: (new Date()).toISOString(),
+      });
+    } else {
+      await setDoc(doc(db, "users", userId), {
+        email: user.email,
+        displayName: data.displayName,
+        avatarUrl: data.avatarUrl,
+        photoUrl: data.photoUrl,
+        description: data.description,
+        experience: data.experience,
+        salary: data.salary,
+        intro: data.intro,
+        skills: data.skills,
+        gallery: data.gallery,
+        iUser: true,
+        hidden:false,
+        isAdmin: false,
+        createdAt: (new Date()).toISOString(),
+        updatedAt: (new Date()).toISOString(),
+        likes: 0,
+      })
+    }
+  } catch (e) {
+    console.log(e)
+    throw new Error( "Something went wrong", { status: 500 })
+  }
 }
 
 export const deleteOwnUser = async (userId) => {
@@ -49,7 +93,7 @@ export const deleteOwnUser = async (userId) => {
     console.log("User deleted");
     logOut();
     return redirect("/auth?mode=login");
-  }catch(error) {
+  } catch(error) {
     throw new Error("An error ocurred while deleting the user", {status: 500});
   };
 }

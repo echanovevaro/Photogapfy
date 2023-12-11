@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteOwnUser, fetchUser, queryClient } from "../http";
-import { useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Button from "react-bootstrap/Button";
@@ -16,11 +16,11 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import Stack from "react-bootstrap/Stack";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { useAuthContext } from "../context/authContext";
 import Spinner from "react-bootstrap/Spinner";
-import UserForm from "./UserForm";
+import { useAuthContext } from "../context/authContext";
 
-export const Details = ({ id }) => {
+export const Details = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { currentUser } = useAuthContext();
 
@@ -28,6 +28,7 @@ export const Details = ({ id }) => {
     data: user,
     isPending,
     isError,
+    error,
   } = useQuery({
     queryKey: ["users", { id }],
     queryFn: () => fetchUser(id),
@@ -36,8 +37,6 @@ export const Details = ({ id }) => {
       if (error.message === "User not found") return false;
       return failureCount < 2;
     },
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
   });
 
   const { mutate, isPending: isDeletePending } = useMutation({
@@ -60,7 +59,9 @@ export const Details = ({ id }) => {
           </Spinner>
         </div>
       )}
-      {isError && <UserForm />}
+      {isError && error.message === "User not found" && (
+        <Navigate to="/photographers/new" replace />
+      )}
       {user && (
         <>
           <Card className="card d-flex flex-column p-0 m-4 mt-0 border-0 border-bottom">
@@ -68,15 +69,6 @@ export const Details = ({ id }) => {
               Professional profile
             </h6>
             <Card.Body className="d-flex flex-column justify-content-start align-items-center p-4 border-top pt-5">
-              {currentUser?.uid === id && (
-                <Stack
-                  direction="horizontal"
-                  className="d-flex justify-content-end"
-                >
-                  <Button variant="outline-danger">Delete account</Button>
-                  <Button variant="outline-primary">Edit profile</Button>
-                </Stack>
-              )}
               <section id="header" className="w-100">
                 <Stack
                   direction="horizontal"
@@ -110,7 +102,12 @@ export const Details = ({ id }) => {
                   </div>
                 </Stack>
               </section>
-              <Card.Text className="mb-5 mt-1">{user.description}</Card.Text>
+              <div className="mb-5 mt-1">
+                {user.description.split(/\n/).map((line) => (
+                  <Card.Text key={line}>{line}</Card.Text>
+                ))}
+              </div>
+
               <section id="skills" className="w-100">
                 <Stack className="d-flex justify-content-start align-items-center mt-5">
                   <h6 className="mb-2 d-flex gap-2 align-items-center section-title">
@@ -176,65 +173,26 @@ export const Details = ({ id }) => {
                 </Stack>
               </section>
             </Card.Body>
-            <Card.Footer className="text-primary d-flex justify-content-end">
-              <Button variant="outline-primary">Hire me</Button>
+            <Card.Footer className="d-flex justify-content-end gap-2">
+              {currentUser?.uid === id && (
+                <>
+                  <Button variant="outline-danger">Delete account</Button>
+                  <Button
+                    as={Link}
+                    variant="outline-primary"
+                    to={`/photographers/${currentUser.uid}/edit`}
+                  >
+                    Edit profile
+                  </Button>
+                </>
+              )}
+              {currentUser?.uid !== id && (
+                <Button variant="outline-primary">Hire me</Button>
+              )}
             </Card.Footer>
           </Card>
         </>
-        // <>
-        //   <div className={classes.card}>
-        //     <div className={classes.cardheader}>
-        //       <div className={classes.user}>
-        //         <div className={classes.dates}>
-        //           <img
-        //             src={user.avatarUrl}
-        //             alt={user.displayName}
-        //           />
-        //           <div>
-        //             <h4>{user.displayName}</h4>
-        //             <small>{user.email}</small>
-        //           </div>
-        //         </div>
-        //         <h3>{user.description}</h3>
-        //       </div>
-
-        //       <div className={classes.cardbody}>
-        //         <img
-        //           src={user.photoUrl}
-        //           alt={user.displayName}
-        //           className={classes.image}
-        //         />
-        //       </div>
-        //     </div>
-        //     {credentials?.isAdmin && (
-        //       <div className={classes.btn}>
-        //         {credentials?.uid === id && (
-        //           <button
-        //             className={classes.btnDelete}
-        //             onClick={() => mutate(id)}
-        //           >
-        //             Delete my account
-        //           </button>
-        //         )}
-        //         <button className={classes.btnEdit}>Edit</button>
-        //       </div>
-        //     )}
-        //     {!credentials?.isAdmin && credentials?.uid === id && (
-        //       <div className={classes.btn}>
-        //         <button
-        //           className={classes.btnDelete}
-        //           onClick={() => mutate(id)}
-        //         >
-        //           Delete my account
-        //         </button>
-        //         <button className={classes.btnEdit}>Edit</button>
-        //       </div>
-        //     )}
-        //   </div>
-        // </>
       )}
     </>
   );
 };
-
-/* eslint-disable react/prop-types */
