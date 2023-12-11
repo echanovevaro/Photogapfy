@@ -31,6 +31,8 @@ function AuthForm() {
   if (mode !== "login" && mode !== "signup" && mode !== "password") {
     throw new Error("Unsupported mode.");
   }
+  const isEmailNotVerified = searchParams.get("emailNotVerified") !== null;
+  const isPasswordReset = searchParams.get("passwordReset") !== null;
   const isSubmitting = navigation.state === "submitting";
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePasswordVisiblity = () => {
@@ -79,6 +81,16 @@ function AuthForm() {
                 : `Reset your password`}
             </h6>
             <div className="p-3 border-top pt-5">
+              {isEmailNotVerified && (
+                <Alert variant="primary">
+                  Please, check your email to verify your account and log in!
+                </Alert>
+              )}
+              {isPasswordReset && (
+                <Alert variant="prumary">
+                  Please, check your email to reset password!
+                </Alert>
+              )}
               {error?.message && (
                 <Alert variant="danger" className="mb-4">
                   {error?.message}

@@ -9,28 +9,9 @@ import { auth } from "../firebase";
 import { loginSchema, registerSchema, passwordSchema } from "../validation";
 import { logOut } from "../utils/auth";
 import AuthForm from "../components/AuthForm";
-import Alert from "react-bootstrap/Alert";
 
 function AuthenticationPage() {
-  const [searchParams] = useSearchParams();
-  const isEmailNotVerified = searchParams.get("emailNotVerified") !== null;
-  const isPasswordReset = searchParams.get("passwordReset") !== null;
-
-  return (
-    <>
-      {isEmailNotVerified && (
-        <Alert variant="primary">
-          Please, check your email to verify your account and log in!
-        </Alert>
-      )}
-      {isPasswordReset && (
-        <Alert variant="prumary">
-          Please, check your email to reset password!
-        </Alert>
-      )}
-      <AuthForm />
-    </>
-  );
+  return <AuthForm />;
 }
 
 export default AuthenticationPage;
@@ -111,11 +92,9 @@ export async function action({ request }) {
     } else throw e;
   } finally {
     if (userCredentials) {
-      const { user } = userCredentials;
-
       if (mode === "signup") {
         try {
-          await sendEmailVerification(user, {
+          await sendEmailVerification(auth.currentUser, {
             url: "https://jocular-sawine-5cf217.netlify.app/auth?mode=login",
           });
           await logOut();
