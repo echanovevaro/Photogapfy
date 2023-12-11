@@ -11,9 +11,9 @@ export default function Errors() {
   }
 
   return (
-    <>
+    <div className="d-flex justify-content-center align-items-center flex-column vh-75">
       <h1>{title}</h1>
       <p>{message}</p>
-    </>
+    </div>
   );
 }

@@ -12,17 +12,15 @@ import DetailUser from "./pages/DetailUser";
 import AuthenticationPage, {
   action as authAction,
 } from "./pages/Authentication";
-import { tokenLoader, logOut } from "./utils/auth";
 import { AuthProvider } from "./context/authContext";
 import ProfileFormPage from "./pages/ProfileFormPage";
+import { logOut } from "./utils/auth";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
-    // errorElement: <Errors />,
-    id: "root",
-    loader: tokenLoader,
+    errorElement: <Errors />,
     children: [
       {
         index: true,

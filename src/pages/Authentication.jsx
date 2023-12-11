@@ -6,7 +6,6 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
 import { loginSchema, registerSchema, passwordSchema } from "../validation";
 import { logOut } from "../utils/auth";
 import AuthForm from "../components/AuthForm";
@@ -129,22 +128,10 @@ export async function action({ request }) {
   } finally {
     if (userCredentials) {
       const { user } = userCredentials;
-      localStorage.setItem("token", user.accessToken);
-      const expiration = new Date();
-      expiration.setHours(expiration.getHours() + 1);
-      localStorage.setItem("expiration", expiration.toISOString());
 
       if (mode === "signup") {
         try {
-          await setDoc(doc(db, "users", user.uid), {
-            email: user.email,
-            displayName: data.displayName,
-            avatarUrl: data.avatarUrl,
-            photoUrl: data.photoUrl,
-            description: data.description,
-            isAdmin: false,
-          });
-          await sendEmailVerification(auth.currentUser, {
+          await sendEmailVerification(user, {
             url: "http://localhost:5173/auth?mode=login",
           });
           logOut();
@@ -155,7 +142,6 @@ export async function action({ request }) {
         return redirect("/auth?mode=login&emailNotVerified=true");
       } else {
         if (!user.emailVerified) {
-          console.log("email not verified");
           logOut();
           return redirect("/auth?mode=login&emailNotVerified=true");
         }
