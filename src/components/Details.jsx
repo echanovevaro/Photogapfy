@@ -182,14 +182,14 @@ export const Details = () => {
               {currentUser?.uid === id && (
                 <>
                   <Button variant="outline-danger" onClick={handleShow}>
-                    Delete profile
+                    Delete
                   </Button>
                   <Button
                     as={Link}
                     variant="outline-primary"
                     to={`/photographers/${currentUser.uid}/edit`}
                   >
-                    Edit profile
+                    Edit
                   </Button>
                 </>
               )}

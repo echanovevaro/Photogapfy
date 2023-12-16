@@ -80,7 +80,7 @@ function AuthForm() {
                 ? `Login`
                 : `Reset your password`}
             </h6>
-            <div className="p-3 border-top pt-5">
+            <div className="p-0 pb-3 border-top pt-5">
               {isEmailNotVerified && (
                 <Alert variant="primary">
                   Please, check your email to verify your account and log in!

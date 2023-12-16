@@ -346,7 +346,7 @@ function UserForm({ user }) {
             </div>
             <Stack
               direction="horizontal"
-              className="d-flex justify-content-end gap-0 mb-3 mt-4 input-group-text border-start-0 border-end-0 p-0"
+              className="d-flex justify-content-end gap-0 mb-3 mt-4 input-group-text border-start-0 border-end-0 p-2"
             >
               <Button
                 as={Link}
