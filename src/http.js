@@ -1,7 +1,6 @@
 import { QueryClient } from "@tanstack/react-query"
 import { collection, query, doc, getDoc, deleteDoc, setDoc, updateDoc, orderBy, startAfter, limit, getDocs, where, or } from "firebase/firestore";
 import { auth, db } from "./firebase"
-import { logOutWithRedirect } from "./utils/auth";
 import { userExtendedSchema } from "./validation";
 
 export const queryClient = new QueryClient()

@@ -73,7 +73,7 @@ export const Details = () => {
             <h6 className="display-6 text-primary mb-3">
               Professional profile
             </h6>
-            <Card.Body className="d-flex flex-column justify-content-start align-items-center p-4 border-top pt-5">
+            <Card.Body className="d-flex flex-column justify-content-start align-items-center p-0 pb-4 border-top pt-5">
               <section id="header" className="w-100">
                 <Stack
                   direction="horizontal"

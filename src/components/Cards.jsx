@@ -10,7 +10,7 @@ export const Cards = ({ data, handleOrder, orederedBy }) => {
       <h6 className="ps-0 display-6 text-primary mb-3">
         Find your professional
       </h6>
-      <Col xs={12} className="p-3 border-top pt-3">
+      <Col xs={12} className="border-top pt-3 p-0">
         <DropdownButton
           as={ButtonGroup}
           id={`order-by`}
@@ -26,7 +26,7 @@ export const Cards = ({ data, handleOrder, orederedBy }) => {
           </Dropdown.Item>
         </DropdownButton>
       </Col>
-      <Col xs={12} className="grid pt-2">
+      <Col xs={12} className="grid pt-2 p-0">
         {data.pages?.map((page) => (
           <React.Fragment key={page.id}>
             {page.data.map((user) => (

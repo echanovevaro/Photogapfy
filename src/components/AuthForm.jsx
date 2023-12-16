@@ -123,7 +123,7 @@ function AuthForm() {
                     {...register("password")}
                   />
                   <i onClick={togglePasswordVisiblity}>
-                    {passwordShown ? eyeSlash : eye}
+                    {passwordShown ? eye : eyeSlash}
                   </i>
                   {errors.password && (
                     <span className="text-danger">
@@ -145,7 +145,7 @@ function AuthForm() {
                     {...register("password2")}
                   />
                   <i onClick={togglePassword2Visiblity}>
-                    {password2Shown ? eyeSlash : eye}
+                    {password2Shown ? eye : eyeSlash}
                   </i>
                   {errors.password2 && (
                     <span className="text-danger">

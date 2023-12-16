@@ -126,6 +126,11 @@ i:hover {
   cursor: pointer;
 }
 
+.navbar-toggler {
+  border: none;
+  outline: none;
+} 
+
 /* .anchor {
     scroll-margin-top: 60px;
 } */

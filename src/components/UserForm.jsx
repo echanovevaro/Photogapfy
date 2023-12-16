@@ -106,7 +106,7 @@ function UserForm({ user }) {
                 : `Edit your public profile`}
             </h6>
 
-            <div className="p-3 border-top pt-5">
+            <div className="p-0 border-top pt-5">
               {(error?.message || Object.keys(errors).length > 0) && (
                 <Alert variant="danger" className="mb-4">
                   {error?.message || "Validation errors, check your inputs"}
@@ -346,7 +346,7 @@ function UserForm({ user }) {
             </div>
             <Stack
               direction="horizontal"
-              className="d-flex justify-content-end gap-0 mb-3 mt-4 input-group-text border-start-0 border-end-0 p-2 pe-3"
+              className="d-flex justify-content-end gap-0 mb-3 mt-4 input-group-text border-start-0 border-end-0 p-0"
             >
               <Button
                 as={Link}
